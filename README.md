@@ -18,6 +18,79 @@ tables, method, historical lanes). Checkpoint / encoder:
 
 ---
 
+## 中文：两台 DGX Spark 一键启动
+
+当前部署由两台机器共同提供服务：
+
+- 主节点（Head）：`192.168.1.252`，用户 `aegiston02`
+- 工作节点（Worker）：`192.168.1.64`，用户 `aegiston01`
+- 对外 OpenAI 兼容接口：`http://192.168.1.252:8000/v1`
+- 对外模型名：`deepseek-v4-flash-0731`
+
+日常启动只需要登录主节点执行，**不需要在工作节点重复运行**：
+
+```bash
+ssh aegiston02@192.168.1.252
+cd /home/aegiston02/DeepSeek-v4-Flash-DSpark-2x-DGX-Spark
+sudo ./ops/start.sh
+```
+
+`ops/start.sh` 会自动完成以下操作：
+
+1. 启动 Nginx API 网关；
+2. 启动 systemd 管理的双机 vLLM 服务；
+3. 检查 Head 和 Worker 两个容器是否都在运行；
+4. 检查未授权请求是否被拒绝、模型列表是否正确；
+5. 发起一次真实的最小推理请求，成功后才返回。
+
+该命令可以重复执行。如果服务已经健康，它不会中断或重启现有服务。
+需要主动重启两台机器上的 LLM 容器时，使用：
+
+```bash
+sudo ./ops/start.sh --force-restart
+```
+
+常用运维命令：
+
+```bash
+# 查看双机容器、systemd、Nginx 和 API 健康状态
+./ops/status.sh
+
+# 查看最近的服务日志
+./ops/logs.sh
+
+# 持续跟踪服务日志，按 Ctrl+C 退出
+./ops/logs.sh --follow
+
+# 单独执行完整健康检查（包含一次真实推理）
+./ops/healthcheck.sh
+
+# 查看 systemd 启动失败的详细日志
+sudo journalctl -u deepseek-v4-flash.service -n 200 --no-pager
+```
+
+从其他机器验证对外接口（将 `<API_KEY>` 换成实际密钥）：
+
+```bash
+curl -sS http://192.168.1.252:8000/v1/models \
+  -H 'Authorization: Bearer <API_KEY>'
+```
+
+如果是全新系统或 systemd 服务尚未安装，先在主节点执行一次：
+
+```bash
+sudo ./ops/install.sh
+sudo ./ops/start.sh
+```
+
+模型和运行镜像已部署时，不要重复下载。确实需要重新下载模型时，使用
+`sudo ./ops/download-model-limited.sh`；脚本会把公网下载速度限制在
+235 Mbit/s（29.375 MB/s），低于 30 MB/s，然后通过双机私网同步到 Worker。
+更多部署细节见 [`ops/README.md`](ops/README.md)。API 密钥只保存在主节点的
+`.env.dspark` 中，不应写入 README、命令历史或提交到 Git。
+
+---
+
 ## Quick start
 
 Run everything from the **head** node. You need two DGX Sparks, RoCE/NCCL
