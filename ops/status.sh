@@ -7,3 +7,4 @@ source "$OPS_DIR/config.env"
 cd "$HEAD_PROJECT_DIR"
 ./status-deepseek-v4-flash-dspark.sh || true
 systemctl --no-pager --full status deepseek-v4-flash.service nginx || true
+"$OPS_DIR/healthcheck.sh"

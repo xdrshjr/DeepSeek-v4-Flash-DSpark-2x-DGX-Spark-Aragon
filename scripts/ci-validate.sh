@@ -25,6 +25,8 @@ for f in \
   scripts/test-nccl-ib-hca-gid-resolve.sh \
   scripts/boot-shape-warmup.sh \
   scripts/test-boot-shape-warmup.sh \
+  scripts/test-ops-healthcheck.sh \
+  ops/*.sh \
   patches/*.sh
 do
   [ -e "$f" ] || continue
@@ -85,6 +87,8 @@ python3 scripts/test-env-normalisation.py -q
 ok "test-env-normalisation"
 python3 scripts/test-dspark-api-keys.py -q
 ok "test-dspark-api-keys"
+bash scripts/test-ops-healthcheck.sh
+ok "test-ops-healthcheck"
 python3 scripts/test-redact-api-key-log.py -q
 ok "test-redact-api-key-log"
 python3 scripts/test-hotfix-atomic-transaction.py -q

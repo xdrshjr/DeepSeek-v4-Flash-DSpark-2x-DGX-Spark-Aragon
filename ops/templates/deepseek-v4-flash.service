@@ -11,7 +11,10 @@ ExecStart=@@PROJECT_DIR@@/start-deepseek-v4-flash-dspark.sh
 ExecStop=@@PROJECT_DIR@@/stop-deepseek-v4-flash-dspark.sh
 RemainAfterExit=yes
 SuccessExitStatus=3
-TimeoutStartSec=1200
+# The launcher has bounded model-load and boot-warmup loops whose documented
+# worst case exceeds two hours on first JIT. Keep a finite outer guard with
+# enough margin so systemd does not kill a valid cold start prematurely.
+TimeoutStartSec=14400
 TimeoutStopSec=120
 
 [Install]

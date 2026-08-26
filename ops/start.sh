@@ -4,6 +4,8 @@ set -Eeuo pipefail
 OPS_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
 source "$OPS_DIR/config.env"
+# shellcheck disable=SC1091
+source "$OPS_DIR/lib.sh"
 
 SERVICE_NAME="deepseek-v4-flash.service"
 FORCE_RESTART=0
@@ -60,10 +62,7 @@ diagnose() {
     "$HEAD_PROJECT_DIR" >&2 || true
 }
 
-if [ ! -s "$HEAD_PROJECT_DIR/.env.dspark" ]; then
-  echo "Missing or empty $HEAD_PROJECT_DIR/.env.dspark" >&2
-  exit 1
-fi
+dspark_require_secure_env_file "$HEAD_PROJECT_DIR/.env.dspark" "$HEAD_USER"
 if ! systemctl cat "$SERVICE_NAME" >/dev/null 2>&1; then
   echo "$SERVICE_NAME is not installed. Run: sudo ./ops/install.sh" >&2
   exit 1

@@ -37,7 +37,9 @@ sudo ./ops/finalize-deployment.sh
 
 For normal operation after the initial deployment, use `sudo ./ops/start.sh`.
 It starts Nginx and the systemd-managed two-node LLM service, preserves an
-already healthy instance, and verifies the authenticated API before returning.
+already healthy instance, and verifies anonymous access rejection, both
+Compose ranks, the configured model, and a real one-token inference before
+returning. Both `VLLM_API_KEY` and `DSPARK_API_KEYS` deployments are supported.
 Use `sudo ./ops/start.sh --force-restart` only when an intentional restart is
 required.
 

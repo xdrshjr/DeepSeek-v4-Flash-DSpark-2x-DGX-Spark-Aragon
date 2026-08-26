@@ -4,13 +4,15 @@ set -Eeuo pipefail
 OPS_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
 source "$OPS_DIR/config.env"
+# shellcheck disable=SC1091
+source "$OPS_DIR/lib.sh"
 
 if [ "$(id -u)" -ne 0 ]; then
   exec sudo -- "$0" "$@"
 fi
 
+dspark_require_secure_env_file "$HEAD_PROJECT_DIR/.env.dspark" "$HEAD_USER"
 "$OPS_DIR/install-deps.sh"
-test -s "$HEAD_PROJECT_DIR/.env.dspark"
 
 nginx_tmp="$(mktemp)"
 service_tmp="$(mktemp)"
