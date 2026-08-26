@@ -23,6 +23,7 @@ inference-capable compatibility route.
 Main commands on the head:
 
 ```bash
+sudo ./ops/start.sh
 sudo ./ops/install.sh
 sudo ./ops/download-model-limited.sh
 ./ops/sync-worker.sh
@@ -33,6 +34,12 @@ sudo ./ops/finalize-deployment.sh
 ./ops/status.sh
 ./ops/logs.sh --follow
 ```
+
+For normal operation after the initial deployment, use `sudo ./ops/start.sh`.
+It starts Nginx and the systemd-managed two-node LLM service, preserves an
+already healthy instance, and verifies the authenticated API before returning.
+Use `sudo ./ops/start.sh --force-restart` only when an intentional restart is
+required.
 
 Secrets are kept only in the remote `.env.dspark` (mode 0600). They are not
 written to `ops/config.env` or committed to Git.
