@@ -1,0 +1,18 @@
+[Unit]
+Description=DeepSeek V4 Flash two-node DGX Spark service
+Wants=network-online.target docker.service
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+User=@@HEAD_USER@@
+WorkingDirectory=@@PROJECT_DIR@@
+ExecStart=@@PROJECT_DIR@@/start-deepseek-v4-flash-dspark.sh
+ExecStop=@@PROJECT_DIR@@/stop-deepseek-v4-flash-dspark.sh
+RemainAfterExit=yes
+SuccessExitStatus=3
+TimeoutStartSec=1200
+TimeoutStopSec=120
+
+[Install]
+WantedBy=multi-user.target

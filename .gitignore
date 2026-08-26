@@ -8,6 +8,7 @@ id_*
 __pycache__/
 *.py[cod]
 .DS_Store
+ops/secrets.env
 *.log
 nohup.out
 *.egg-info/
