@@ -1,10 +1,16 @@
 # Setup — A/B replicas, models, and step-by-step reproduction
 
+> **Historical document (0731 preview lane).** This describes the early A/B
+> replica setup (4 nodes, `DeepSeek-V4-Flash-DSpark` preview checkpoint, fp8
+> KV, `max-model-len 262144`, MTP-5, `vllm-dspark-runtime:clean` builds). None
+> of it is the current recipe — for today's two-node Vision-Exp lane see
+> `README.md`; nothing else in the repo links here.
+
 ## Hardware / fabric
 
 - 4× NVIDIA DGX Spark (GB10, SM121, 128 GB unified each), 200 Gb RoCE fabric.
 - Two independent **TP=2** replicas (one GPU per node, 2 nodes per replica).
-- Fabric interface `enp1s0f1np1`, HCA `rocep1s0f1`, `NCCL_IB_GID_INDEX=3`.
+- Fabric interface `enp1s0f1np1`, HCA `rocep1s0f1`. Earlier revisions pinned `NCCL_IB_GID_INDEX=3`; the launcher now validates sysfs GIDs and leaves the index unset so NCCL selects the RoCEv2/IPv4 GID per HCA.
 
 ## Model (same weights for both replicas)
 

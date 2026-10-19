@@ -1,5 +1,7 @@
 # Credits
 
+The files added in [`7f1217f`](https://github.com/MiaAI-Lab/DeepSeek-v4-Flash-DSpark-2x-DGX-Spark/commit/7f1217f236ac96ec034c1645acc08a643492b09d), including the files under `recipe/overlay/`, came from **Tony D** ([tonyd2wild](https://github.com/tonyd2wild/DeepSeek-v4-Flash-DSpark-1M-NVFP4-KV-2x-DGX-Spark)). He is the author of that work.
+
 This repo combines several public efforts. Please credit the upstream authors
 when reusing the recipe, the patch, or benchmark numbers.
 
@@ -18,8 +20,13 @@ This repo's concurrency results, overlay proposer, and NVFP4 launch path all
 depend directly on that contribution.
 
 **[@u1tra_instinct](https://x.com/u1tra_instinct)** — special thanks for the
-optional abliterated weights path (`ABLITERATED=1`):
-https://huggingface.co/drowzeys/keys-DeepSeekV4-Flash-GA-0731-Dspark-Abliterated-32-32
+optional abliterated path (`ABLITERATED=1`), gated on the original repo
+https://huggingface.co/drowzeys/keys-DeepSeekV4Flash-Vision-EXP-ablit
+
+**[drowzeys / Keys](https://huggingface.co/drowzeys/keys-DeepSeekV4-Flash-GA-0731-Dspark-Abliterated-Anchored-Tensors)** — published the
+4096-dimensional refusal direction (`ablit/refusal_direction_r1.pt`) used by
+the gated runtime path (`ABLITERATED=1`). Full notice:
+[`files/README.md`](files/README.md).
 
 ## DSpark Concurrency Patch
 
@@ -60,6 +67,14 @@ repo builds from:
 
 - https://github.com/MiaAI-Lab/DeepSeek-v4-Flash-DSpark-2x-DGX-Spark
 
+## Three-Node TP=3 Padding
+
+Optional `./start-tp3.sh` vendors the attention-group pad (8→9) from:
+
+- https://github.com/localaiguyy/DeepSeek-V4-Flash-DSpark-3x-DGX-Spark
+
+That work is independent of this 2-node recipe. See [docs/TP3.md](docs/TP3.md).
+
 ## Upstream Foundations
 
 This work also relies on:
@@ -70,13 +85,9 @@ This work also relies on:
 - DeepSeek V4 Flash
 - DeepSeek-AI DeepSpec / DSpark speculative decoding research
 
-## TonyD2Wild NVFP4 Recipe Lineage
+## Tony D (tonyd2wild)
 
-TonyD2Wild's public NVFP4 recipe work informed this fork's garble-fix launcher
-defaults, runtime documentation, and the non-uniform batch guard merged into the
-bind-mounted `dspark_proposer.py`.
-
-- https://github.com/tonyd2wild/DeepSeek-v4-Flash-DSpark-1M-NVFP4-KV-2x-DGX-Spark
+The files added in [`7f1217f`](https://github.com/MiaAI-Lab/DeepSeek-v4-Flash-DSpark-2x-DGX-Spark/commit/7f1217f236ac96ec034c1645acc08a643492b09d), including the files under `recipe/overlay/`, came from Tony D ([tonyd2wild](https://github.com/tonyd2wild/DeepSeek-v4-Flash-DSpark-1M-NVFP4-KV-2x-DGX-Spark)). He is the author of that work.
 
 ## MiaAI-Lab Contribution
 
